@@ -7,6 +7,9 @@ public class Code {
     public static final int PARAM_ERROR = 400;
     public static final String PARAM_ERROR_MSG = "请求参数格式不正确";
 
+    public static final int NOT_FOUND_ERROR = 404;
+    public static final String NOT_FOUND_ERROR_MSG = "请求的资源不存在";
+
     public static final int INFO_EMPTY_ERROR = 300;
     public static final String INFO_EMPTY_ERROR_MSG = "输入信息不完整";
 

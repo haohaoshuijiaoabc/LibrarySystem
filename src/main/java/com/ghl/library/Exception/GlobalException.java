@@ -3,12 +3,15 @@ package com.ghl.library.Exception;
 import com.ghl.library.Pojo.Result;
 import com.ghl.library.Util.Code;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * 全局异常处理器。
@@ -73,6 +76,21 @@ public class GlobalException {
     public Result<Void> handleMessageNotReadable(HttpMessageNotReadableException e) {
         log.warn("请求体解析失败：{}", e.getMessage());
         return Result.error(Code.PARAM_ERROR, Code.PARAM_ERROR_MSG);
+    }
+
+    /**
+     * 处理静态资源不存在（如 favicon.ico、根路径没有首页）。
+     *
+     * <p>这类 404 属于正常的路由结果，不应按“系统异常”打印堆栈。</p>
+     *
+     * @param e 静态资源不存在异常
+     * @return 404 响应
+     */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoResourceFoundException.class)
+    public Result<Void> handleNoResourceFound(NoResourceFoundException e) {
+        log.debug("静态资源不存在：{}", e.getResourcePath());
+        return Result.error(Code.NOT_FOUND_ERROR, Code.NOT_FOUND_ERROR_MSG);
     }
 
     /**

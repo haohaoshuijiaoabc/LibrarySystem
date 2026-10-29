@@ -4,6 +4,8 @@ import com.ghl.library.Pojo.Result;
 import com.ghl.library.Util.Code;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,5 +37,17 @@ class GlobalExceptionTest {
         assertThat(result.getCode()).isEqualTo(Code.UNKNOWN_CODE_ERROR);
         assertThat(result.getMessage()).isEqualTo(Code.UNKNOWN_CODE_ERROR_MSG);
         assertThat(result.getMessage()).doesNotContain("password");
+    }
+
+    @Test
+    @DisplayName("静态资源不存在应返回 404 而不是系统异常")
+    void handleNoResourceFound() {
+        NoResourceFoundException exception =
+                new NoResourceFoundException(HttpMethod.GET, "favicon.ico");
+
+        Result<Void> result = globalException.handleNoResourceFound(exception);
+
+        assertThat(result.getCode()).isEqualTo(Code.NOT_FOUND_ERROR);
+        assertThat(result.getMessage()).isEqualTo(Code.NOT_FOUND_ERROR_MSG);
     }
 }

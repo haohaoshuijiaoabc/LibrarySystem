@@ -5,6 +5,7 @@ import com.ghl.library.Interceptor.UserLoginInterceptor;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -30,5 +31,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(adminLoginInterceptor)
                 .addPathPatterns("/admin/**")
                 .excludePathPatterns("/admin/login");
+    }
+
+    /**
+     * 访问根路径时直接跳转登录页，避免把“/”当成缺失的静态资源。
+     *
+     * @param registry 视图控制器注册表
+     */
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addRedirectViewController("/", "/login.html");
     }
 }
