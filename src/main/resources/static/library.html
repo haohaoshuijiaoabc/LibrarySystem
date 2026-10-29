@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书借阅平台 · 工作台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', '微软雅黑', system-ui, sans-serif;
+            background: #f0f4f8;
+            color: #1e2b3c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部导航 */
+        .top-bar {
+            background: #ffffff;
+            height: 64px;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #dce3ec;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .platform-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e3a6f;
+            letter-spacing: 0.3px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background: #1e3a6f;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .user-detail {
+            line-height: 1.4;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .user-phone {
+            font-size: 12px;
+            color: #5f6c80;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #bcc6d4;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .logout-btn:hover {
+            background: #f2f6fc;
+            border-color: #8a9bb5;
+        }
+
+        /* 主内容 - 首页卡片区 */
+        .home-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 32px;
+        }
+
+        .card-panel {
+            max-width: 900px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e9f2;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+            padding: 40px 32px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 30px rgba(0,0,0,0.08);
+            border-color: #cbd6e4;
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 24px;
+        }
+
+        .feature-card h2 {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1e3a6f;
+            margin-bottom: 16px;
+        }
+
+        .feature-card p {
+            color: #5f6c80;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* 操作面板（借阅/已借阅） */
+        .panel-view {
+            flex: 1;
+            padding: 28px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .back-btn {
+            background: white;
+            border: 1px solid #ccd7e4;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .back-btn:hover {
+            background: #f2f6fc;
+        }
+
+        .panel-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1e2b3c;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .search-field {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5c72;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .search-field input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ccd7e4;
+            border-radius: 10px;
+            font-size: 15px;
+            background: white;
+            outline: none;
+        }
+
+        .search-field input:focus {
+            border-color: #2a6df4;
+            box-shadow: 0 0 0 3px rgba(42,109,244,0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.15s;
+        }
+
+        .btn-primary {
+            background: #1e3a6f;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #143048;
+        }
+
+        .btn-secondary {
+            background: white;
+            border-color: #ccd7e4;
+            color: #2c3e50;
+        }
+
+        .btn-secondary:hover {
+            background: #f2f6fc;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e9f2;
+            overflow: auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 600px;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 16px 18px;
+            background: #f8fafd;
+            border-bottom: 1px solid #dce3ec;
+            font-weight: 600;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 16px 18px;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid #2a6df4;
+            color: #2a6df4;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: #2a6df4;
+            color: white;
+        }
+
+        .return-btn {
+            border-color: #e67e22;
+            color: #e67e22;
+        }
+
+        .return-btn:hover {
+            background: #e67e22;
+            color: white;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .pagination button {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #ccd7e4;
+            background: white;
+            cursor: pointer;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 48px 0;
+            color: #7a8b9f;
+        }
+
+        /* 模态框 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-card {
+            background: white;
+            max-width: 420px;
+            width: 90%;
+            border-radius: 20px;
+            padding: 32px 28px;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.15);
+        }
+
+        .modal-icon { font-size: 32px; margin-bottom: 18px; }
+        .modal-title { font-size: 20px; font-weight: 600; margin-bottom: 14px; }
+        .modal-message { color: #3a4e64; margin-bottom: 28px; line-height: 1.6; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 14px; }
+
+        .footer-note {
+            text-align: right;
+            color: #8b9aab;
+            font-size: 12px;
+            border-top: 1px solid #dce3ec;
+            padding-top: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 未登录拦截 -->
+<div id="unauthorizedMsg" style="display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f4f8;">
+    <div style="background: white; padding: 32px 48px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-left: 6px solid #c0392b; font-size: 18px;">
+        未授权访问，正在返回登录页...
+    </div>
+</div>
+
+<!-- 主应用 -->
+<div id="appContent" style="display: none; flex: 1; flex-direction: column; min-height: 100vh;">
+    <header class="top-bar">
+        <div class="logo-area">
+            <span class="logo-icon">📚</span>
+            <span class="platform-name">图书借阅平台</span>
+        </div>
+        <div class="user-section">
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">U</div>
+                <div class="user-detail">
+                    <div class="user-name" id="displayName">-</div>
+                    <div class="user-phone" id="displayPhone">-</div>
+                </div>
+            </div>
+            <button class="logout-btn" id="logoutBtn">退出</button>
+        </div>
+    </header>
+
+    <!-- 首页：两个功能卡片 -->
+    <div id="homeView" class="home-container">
+        <div class="card-panel">
+            <div class="feature-card" data-view="borrow">
+                <div class="card-icon">📖</div>
+                <h2>借阅书本</h2>
+                <p>搜索图书并办理借阅手续，库存实时更新。</p>
+            </div>
+            <div class="feature-card" data-view="borrowed">
+                <div class="card-icon">📋</div>
+                <h2>我的借阅</h2>
+                <p>查看当前已借阅的图书列表，支持归还操作。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 借阅书本视图（初始隐藏） -->
+    <div id="borrowView" class="panel-view" style="display: none;">
+        <div class="panel-header">
+            <button class="back-btn" id="backFromBorrow">← 返回首页</button>
+            <div class="panel-title">📖 借阅书本</div>
+        </div>
+        <div class="search-bar">
+            <div class="search-field">
+                <label>书名</label>
+                <input type="text" id="searchName" placeholder="输入书名关键词">
+            </div>
+            <div class="search-field">
+                <label>作者</label>
+                <input type="text" id="searchAuthor" placeholder="输入作者姓名">
+            </div>
+            <div style="display: flex; align-items: flex-end; gap: 10px;">
+                <button class="btn btn-primary" id="searchBtn">查询</button>
+                <button class="btn btn-secondary" id="resetBtn">重置</button>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table" id="bookTable">
+                <thead><tr><th>#</th><th>书名</th><th>作者</th><th>操作</th></tr></thead>
+                <tbody id="bookTableBody"><tr><td colspan="4" class="empty-message">加载中...</td></tr></tbody>
+            </table>
+        </div>
+        <div class="footer-note">输入关键词搜索，点击借阅完成操作</div>
+    </div>
+
+    <!-- 我的借阅视图（初始隐藏） -->
+    <div id="borrowedView" class="panel-view" style="display: none;">
+        <div class="panel-header">
+            <button class="back-btn" id="backFromBorrowed">← 返回首页</button>
+            <div class="panel-title">📋 我的借阅</div>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table" id="borrowedTable">
+                <thead><tr><th>#</th><th>书名</th><th>借阅时间</th><th>操作</th></tr></thead>
+                <tbody id="borrowedTableBody"><tr><td colspan="4" class="empty-message">加载中...</td></tr></tbody>
+            </table>
+        </div>
+        <div id="borrowedPagination" class="pagination"></div>
+        <div class="footer-note">当前借阅记录，支持分页与归还</div>
+    </div>
+</div>
+
+<!-- 确认借阅模态框 -->
+<div id="confirmModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-icon">📖</div>
+        <div class="modal-title">确认借阅</div>
+        <div class="modal-message" id="confirmMessage">您确定要借阅《》吗？</div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" id="cancelConfirmBtn">取消</button>
+            <button class="btn btn-primary" id="confirmBtn">确认</button>
+        </div>
+    </div>
+</div>
+
+<!-- 信息提示模态框 -->
+<div id="infoModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-icon" id="infoModalIcon">✅</div>
+        <div class="modal-title" id="infoModalTitle">提示</div>
+        <div class="modal-message" id="infoModalMessage"></div>
+        <div class="modal-actions">
+            <button class="btn btn-primary" id="infoModalOkBtn">确 认</button>
+        </div>
+    </div>
+</div>
+
+<!-- 归还确认模态框 -->
+<div id="returnConfirmModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-icon">🔄</div>
+        <div class="modal-title">确认归还</div>
+        <div class="modal-message" id="returnConfirmMessage">确定要归还《》吗？</div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" id="cancelReturnBtn">取消</button>
+            <button class="btn btn-primary" id="confirmReturnBtn" style="background:#e67e22;">确认归还</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        'use strict';
+
+        // ---------- 会话校验 ----------
+        async function validateSession() {
+            try {
+                const resp = await fetch('/user/info', { method: 'GET', credentials: 'same-origin' });
+                const result = await resp.json();
+                if (result.code === 200) {
+                    sessionStorage.setItem('libraryUser', JSON.stringify(result.data));
+                    return result.data;
+                }
+            } catch (e) {}
+            sessionStorage.clear();
+            window.location.replace('login.html');
+            return null;
+        }
+
+        let currentUser = null;
+        validateSession().then(user => {
+            if (!user) return;
+            currentUser = user;
+            document.getElementById('unauthorizedMsg').style.display = 'none';
+            document.getElementById('appContent').style.display = 'flex';
+
+            const username = user.username || '用户';
+            document.getElementById('userAvatar').textContent = username.charAt(0).toUpperCase();
+            document.getElementById('displayName').textContent = username;
+            document.getElementById('displayPhone').textContent = user.phone || '';
+
+            initApp();
+        });
+
+        function initApp() {
+            // 视图切换
+            const homeView = document.getElementById('homeView');
+            const borrowView = document.getElementById('borrowView');
+            const borrowedView = document.getElementById('borrowedView');
+
+            function showView(view) {
+                homeView.style.display = 'none';
+                borrowView.style.display = 'none';
+                borrowedView.style.display = 'none';
+                if (view === 'home') homeView.style.display = 'flex';
+                else if (view === 'borrow') borrowView.style.display = 'block';
+                else if (view === 'borrowed') borrowedView.style.display = 'block';
+            }
+
+            document.querySelectorAll('[data-view]').forEach(card => {
+                card.addEventListener('click', () => {
+                    const view = card.dataset.view;
+                    if (view === 'borrow') { showView('borrow'); fetchBooks(); }
+                    else if (view === 'borrowed') { showView('borrowed'); fetchBorrowed(1); }
+                });
+            });
+
+            document.getElementById('backFromBorrow').addEventListener('click', () => showView('home'));
+            document.getElementById('backFromBorrowed').addEventListener('click', () => showView('home'));
+
+            // 工具
+            function formatDate(s) {
+                if (!s) return '';
+                const d = new Date(s);
+                if (isNaN(d.getTime())) return s;
+                return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+            }
+
+            function escapeHtml(s) {
+                if (!s) return s;
+                return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+            }
+
+            function showInfoModal(title, msg, isSuccess = true) {
+                const modal = document.getElementById('infoModal');
+                document.getElementById('infoModalTitle').textContent = title;
+                document.getElementById('infoModalMessage').textContent = msg;
+                document.getElementById('infoModalIcon').textContent = isSuccess ? '✅' : '❌';
+                modal.style.display = 'flex';
+            }
+
+            // 借阅相关
+            const searchName = document.getElementById('searchName');
+            const searchAuthor = document.getElementById('searchAuthor');
+            const bookTbody = document.getElementById('bookTableBody');
+
+            async function fetchBooks(name = '', author = '') {
+                bookTbody.innerHTML = `<tr><td colspan="4" class="empty-message">加载中...</td></tr>`;
+                try {
+                    const params = new URLSearchParams();
+                    if (name) params.append('name', name);
+                    if (author) params.append('author', author);
+                    const resp = await fetch(`/user/allbooks?${params.toString()}`, { credentials: 'same-origin' });
+                    const result = await resp.json();
+                    if (result.code === 200) renderBooks(result.data || []);
+                    else if (result.code === 1000) { sessionStorage.clear(); window.location.replace('login.html'); }
+                    else bookTbody.innerHTML = `<tr><td colspan="4" class="empty-message">${result.message || '查询失败'}</td></tr>`;
+                } catch {
+                    bookTbody.innerHTML = `<tr><td colspan="4" class="empty-message">网络异常</td></tr>`;
+                }
+            }
+
+            function renderBooks(books) {
+                if (!books.length) { bookTbody.innerHTML = `<tr><td colspan="4" class="empty-message">暂无图书</td></tr>`; return; }
+                let html = '';
+                books.forEach((b, idx) => {
+                    html += `<tr><td>${idx+1}</td><td>${escapeHtml(b.name)||'—'}</td><td>${escapeHtml(b.author)||'—'}</td>
+                        <td><button class="action-btn borrow-action" data-id="${b.id}" data-name="${escapeHtml(b.name)}">借阅</button></td></tr>`;
+                });
+                bookTbody.innerHTML = html;
+                document.querySelectorAll('.borrow-action').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const bookId = btn.dataset.id;
+                        const bookName = btn.dataset.name;
+                        const modal = document.getElementById('confirmModal');
+                        document.getElementById('confirmMessage').textContent = `您确定要借阅《${bookName}》吗？`;
+                        modal.style.display = 'flex';
+                        const onConfirm = async () => {
+                            btn.disabled = true; btn.textContent = '处理中';
+                            try {
+                                const resp = await fetch(`/user/borrow?bookId=${bookId}`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                    credentials: 'same-origin'
+                                });
+                                const res = await resp.json();
+                                if (res.code === 200) {
+                                    showInfoModal('借阅成功', `您已成功借阅《${res.data.bookname}》。`);
+                                    fetchBooks(searchName.value.trim(), searchAuthor.value.trim());
+                                } else if (res.code === 1000) { sessionStorage.clear(); window.location.replace('login.html'); }
+                                else { showInfoModal('借阅失败', res.message || '操作失败', false); btn.disabled = false; btn.textContent = '借阅'; }
+                            } catch { showInfoModal('网络错误', '请稍后重试', false); btn.disabled = false; btn.textContent = '借阅'; }
+                            modal.style.display = 'none';
+                            document.getElementById('confirmBtn').removeEventListener('click', onConfirm);
+                            document.getElementById('cancelConfirmBtn').removeEventListener('click', onCancel);
+                        };
+                        const onCancel = () => { modal.style.display = 'none'; };
+                        document.getElementById('confirmBtn').addEventListener('click', onConfirm);
+                        document.getElementById('cancelConfirmBtn').addEventListener('click', onCancel);
+                    });
+                });
+            }
+
+            document.getElementById('searchBtn').addEventListener('click', () => fetchBooks(searchName.value.trim(), searchAuthor.value.trim()));
+            document.getElementById('resetBtn').addEventListener('click', () => { searchName.value = ''; searchAuthor.value = ''; fetchBooks(); });
+            searchName.addEventListener('keypress', e => { if(e.key==='Enter') fetchBooks(searchName.value.trim(), searchAuthor.value.trim()); });
+            searchAuthor.addEventListener('keypress', e => { if(e.key==='Enter') fetchBooks(searchName.value.trim(), searchAuthor.value.trim()); });
+
+            // 已借阅相关
+            const borrowedTbody = document.getElementById('borrowedTableBody');
+            const paginationDiv = document.getElementById('borrowedPagination');
+            let currentPage = 1, pageSize = 8;
+
+            async function fetchBorrowed(page = 1) {
+                borrowedTbody.innerHTML = `<tr><td colspan="4" class="empty-message">加载中...</td></tr>`;
+                try {
+                    const resp = await fetch(`/user/borrowed?pageNum=${page}&pageSize=${pageSize}`, { credentials: 'same-origin' });
+                    const result = await resp.json();
+                    if (result.code === 200) {
+                        const data = result.data;
+                        renderBorrowed(data.records || [], data.current, data.pages);
+                        currentPage = data.current;
+                    } else if (result.code === 1000) { sessionStorage.clear(); window.location.replace('login.html'); }
+                    else { borrowedTbody.innerHTML = `<tr><td colspan="4" class="empty-message">${result.message || '加载失败'}</td></tr>`; paginationDiv.innerHTML = ''; }
+                } catch { borrowedTbody.innerHTML = `<tr><td colspan="4" class="empty-message">网络异常</td></tr>`; paginationDiv.innerHTML = ''; }
+            }
+
+            function renderBorrowed(records, cur, totalPages) {
+                if (!records.length) {
+                    borrowedTbody.innerHTML = `<tr><td colspan="4" class="empty-message">暂无借阅记录</td></tr>`;
+                    paginationDiv.innerHTML = '';
+                    return;
+                }
+                let html = '';
+                records.forEach((item, idx) => {
+                    html += `<tr><td>${(cur-1)*pageSize + idx + 1}</td><td>${escapeHtml(item.bookname)||'—'}</td><td>${formatDate(item.borrow_time)}</td>
+                        <td><button class="action-btn return-btn return-action" data-bookname="${escapeHtml(item.bookname)}">归还</button></td></tr>`;
+                });
+                borrowedTbody.innerHTML = html;
+
+                document.querySelectorAll('.return-action').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const bookName = btn.dataset.bookname;
+                        const modal = document.getElementById('returnConfirmModal');
+                        document.getElementById('returnConfirmMessage').textContent = `确定要归还《${bookName}》吗？`;
+                        modal.style.display = 'flex';
+                        const onConfirm = async () => {
+                            btn.disabled = true; btn.textContent = '处理中';
+                            try {
+                                const resp = await fetch('/user/return', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ name: bookName }),
+                                    credentials: 'same-origin'
+                                });
+                                const res = await resp.json();
+                                if (res.code === 200) {
+                                    showInfoModal('归还成功', `《${bookName}》已成功归还。`);
+                                    fetchBorrowed(currentPage);
+                                } else if (res.code === 1000) { sessionStorage.clear(); window.location.replace('login.html'); }
+                                else { showInfoModal('归还失败', res.message || '操作失败', false); btn.disabled = false; btn.textContent = '归还'; }
+                            } catch { showInfoModal('网络错误', '请稍后重试', false); btn.disabled = false; btn.textContent = '归还'; }
+                            modal.style.display = 'none';
+                            document.getElementById('confirmReturnBtn').removeEventListener('click', onConfirm);
+                            document.getElementById('cancelReturnBtn').removeEventListener('click', onCancel);
+                        };
+                        const onCancel = () => { modal.style.display = 'none'; };
+                        document.getElementById('confirmReturnBtn').addEventListener('click', onConfirm);
+                        document.getElementById('cancelReturnBtn').addEventListener('click', onCancel);
+                    });
+                });
+
+                let pagHtml = `<button ${cur<=1?'disabled':''} data-page="1">首页</button>`;
+                pagHtml += `<button ${cur<=1?'disabled':''} data-page="${cur-1}">上一页</button>`;
+                pagHtml += `<span style="padding:8px 16px;">${cur} / ${totalPages}</span>`;
+                pagHtml += `<button ${cur>=totalPages?'disabled':''} data-page="${cur+1}">下一页</button>`;
+                pagHtml += `<button ${cur>=totalPages?'disabled':''} data-page="${totalPages}">尾页</button>`;
+                pagHtml += `<input type="number" min="1" max="${totalPages}" id="jumpPage" value="${cur}" style="width:70px; margin-left:10px;">`;
+                pagHtml += `<button id="jumpBtn">跳转</button>`;
+                paginationDiv.innerHTML = pagHtml;
+                paginationDiv.querySelectorAll('[data-page]').forEach(b => b.addEventListener('click', () => fetchBorrowed(parseInt(b.dataset.page))));
+                document.getElementById('jumpBtn')?.addEventListener('click', () => {
+                    const p = parseInt(document.getElementById('jumpPage').value);
+                    if (p>=1 && p<=totalPages) fetchBorrowed(p);
+                });
+            }
+
+            // 模态框关闭
+            document.getElementById('infoModalOkBtn').addEventListener('click', () => document.getElementById('infoModal').style.display = 'none');
+
+            // 退出登录
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    await fetch('/user/logout', { method: 'POST', credentials: 'same-origin' });
+                } catch (e) {}
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            });
+        }
+    })();
+</script>
+</body>
+</html>

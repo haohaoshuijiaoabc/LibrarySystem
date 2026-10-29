@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书借阅平台 · 登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 460px;
+            padding: 20px;
+        }
+        .login-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+            padding: 36px 32px;
+        }
+        .brand {
+            margin-bottom: 28px;
+            text-align: center;
+        }
+        .brand h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a2b3c;
+            letter-spacing: 0.3px;
+            margin-bottom: 8px;
+        }
+        .brand .subhead {
+            font-size: 14px;
+            color: #6c7a8a;
+            font-weight: 400;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-weight: 600;
+            font-size: 15px;
+            color: #64748b;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.15s;
+        }
+        .tab.active {
+            background: #1e3a6f;
+            color: white;
+        }
+        .input-field {
+            margin-bottom: 22px;
+        }
+        .input-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+        .input-field input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1.5px solid #d0d9e2;
+            border-radius: 8px;
+            font-size: 15px;
+            background: #ffffff;
+            transition: 0.15s;
+            outline: none;
+        }
+        .input-field input:focus {
+            border-color: #1e3a6f;
+            box-shadow: 0 0 0 3px rgba(30, 58, 111, 0.08);
+        }
+        .error-msg {
+            min-height: 38px;
+            margin-top: -6px;
+            margin-bottom: 16px;
+            color: #d6394b;
+            font-size: 13.5px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            border-left: 3px solid #d6394b;
+        }
+        .login-btn {
+            width: 100%;
+            background: #1e3a6f;
+            border: none;
+            color: white;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.15s;
+            letter-spacing: 0.5px;
+        }
+        .login-btn:hover {
+            background: #0f2a4f;
+        }
+        .login-btn:disabled {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .footer-note {
+            margin-top: 22px;
+            text-align: center;
+            color: #8a99a8;
+            font-size: 12px;
+        }
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="login-card">
+        <div class="brand">
+            <h1>图书借阅平台</h1>
+            <div class="subhead">身份验证 · 安全登录</div>
+        </div>
+        <div class="tabs">
+            <div class="tab active" data-type="user">用户登录</div>
+            <div class="tab" data-type="admin">管理员登录</div>
+        </div>
+
+        <!-- 用户登录表单 -->
+        <form id="userLoginForm">
+            <div class="input-field">
+                <label>账号</label>
+                <input type="text" id="username" placeholder="用户名" autocomplete="off">
+            </div>
+            <div class="input-field">
+                <label>密码</label>
+                <input type="password" id="password" placeholder="密码" autocomplete="off">
+            </div>
+            <div id="userErrorBox" class="error-msg"></div>
+            <button type="submit" id="userLoginBtn" class="login-btn">
+                <span id="userBtnText">登 录</span>
+                <span id="userBtnLoading" style="display: none;"><span class="spinner"></span>验证中</span>
+            </button>
+        </form>
+
+        <!-- 管理员登录表单 -->
+        <form id="adminLoginForm" style="display: none;">
+            <div class="input-field">
+                <label>管理员账号</label>
+                <input type="text" id="adminName" placeholder="管理员姓名" autocomplete="off">
+            </div>
+            <div class="input-field">
+                <label>密码</label>
+                <input type="password" id="adminPassword" placeholder="密码" autocomplete="off">
+            </div>
+            <div id="adminErrorBox" class="error-msg"></div>
+            <button type="submit" id="adminLoginBtn" class="login-btn">
+                <span id="adminBtnText">管理员登录</span>
+                <span id="adminBtnLoading" style="display: none;"><span class="spinner"></span>验证中</span>
+            </button>
+        </form>
+
+        <div class="footer-note">LIBRARY MANAGEMENT SYSTEM</div>
+    </div>
+</div>
+<script>
+    (function() {
+        'use strict';
+
+        // 检查是否已登录（用户端）
+        async function checkUserSession() {
+            try {
+                const resp = await fetch('/user/info', { credentials: 'same-origin' });
+                const data = await resp.json();
+                if (data.code === 200) {
+                    sessionStorage.setItem('libraryUser', JSON.stringify(data.data));
+                    window.location.replace('library.html');
+                    return true;
+                }
+            } catch (e) {}
+            return false;
+        }
+        // 检查管理员会话
+        async function checkAdminSession() {
+            try {
+                const resp = await fetch('/admin/BookInfo?pageNum=1&pageSize=1&bookName=&author=', { credentials: 'same-origin' });
+                const data = await resp.json();
+                if (data.code === 200 || data.code === 0) { // 只要能返回正常数据结构即认为已登录
+                    window.location.replace('admin.html');
+                    return true;
+                }
+            } catch (e) {}
+            return false;
+        }
+
+        checkUserSession();
+        checkAdminSession();
+
+        // 切换选项卡
+        const tabs = document.querySelectorAll('.tab');
+        const userForm = document.getElementById('userLoginForm');
+        const adminForm = document.getElementById('adminLoginForm');
+        let currentType = 'user';
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentType = tab.dataset.type;
+                if (currentType === 'user') {
+                    userForm.style.display = 'block';
+                    adminForm.style.display = 'none';
+                } else {
+                    userForm.style.display = 'none';
+                    adminForm.style.display = 'block';
+                }
+                // 清空错误提示
+                document.getElementById('userErrorBox').textContent = '';
+                document.getElementById('adminErrorBox').textContent = '';
+            });
+        });
+
+        // 工具函数
+        function setLoading(btn, btnText, loadingSpan, isLoading) {
+            btn.disabled = isLoading;
+            btnText.style.display = isLoading ? 'none' : 'inline';
+            loadingSpan.style.display = isLoading ? 'inline' : 'none';
+        }
+
+        // 用户登录
+        const userLoginForm = document.getElementById('userLoginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const userErrorBox = document.getElementById('userErrorBox');
+        const userLoginBtn = document.getElementById('userLoginBtn');
+        const userBtnText = document.getElementById('userBtnText');
+        const userBtnLoading = document.getElementById('userBtnLoading');
+
+        userLoginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            userErrorBox.textContent = '';
+            setLoading(userLoginBtn, userBtnText, userBtnLoading, true);
+
+            try {
+                const loginResp = await fetch('/user/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                    credentials: 'same-origin'
+                });
+                const loginResult = await loginResp.json();
+                if (loginResult.code === 200) {
+                    const infoResp = await fetch('/user/info', { credentials: 'same-origin' });
+                    const infoResult = await infoResp.json();
+                    if (infoResult.code === 200) {
+                        sessionStorage.setItem('libraryUser', JSON.stringify(infoResult.data));
+                        window.location.href = 'library.html';
+                    } else {
+                        userErrorBox.textContent = infoResult.message || '获取用户信息失败';
+                    }
+                } else {
+                    userErrorBox.textContent = loginResult.message || '登录失败';
+                }
+            } catch (err) {
+                userErrorBox.textContent = '网络异常，请稍后重试';
+            } finally {
+                setLoading(userLoginBtn, userBtnText, userBtnLoading, false);
+            }
+        });
+
+        // 管理员登录
+        const adminLoginForm = document.getElementById('adminLoginForm');
+        const adminNameInput = document.getElementById('adminName');
+        const adminPasswordInput = document.getElementById('adminPassword');
+        const adminErrorBox = document.getElementById('adminErrorBox');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminBtnText = document.getElementById('adminBtnText');
+        const adminBtnLoading = document.getElementById('adminBtnLoading');
+
+        adminLoginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const adminName = adminNameInput.value.trim();
+            const password = adminPasswordInput.value;
+            adminErrorBox.textContent = '';
+            setLoading(adminLoginBtn, adminBtnText, adminBtnLoading, true);
+
+            try {
+                const resp = await fetch('/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ adminName, password }),
+                    credentials: 'same-origin'
+                });
+                const result = await resp.json();
+                if (result.code === 200) {
+                    window.location.href = 'admin.html';
+                } else {
+                    adminErrorBox.textContent = result.message || '登录失败';
+                }
+            } catch (err) {
+                adminErrorBox.textContent = '网络异常，请稍后重试';
+            } finally {
+                setLoading(adminLoginBtn, adminBtnText, adminBtnLoading, false);
+            }
+        });
+
+
+        usernameInput.addEventListener('keypress', (e) => { if(e.key==='Enter') userLoginForm.dispatchEvent(new Event('submit')); });
+        passwordInput.addEventListener('keypress', (e) => { if(e.key==='Enter') userLoginForm.dispatchEvent(new Event('submit')); });
+        adminNameInput.addEventListener('keypress', (e) => { if(e.key==='Enter') adminLoginForm.dispatchEvent(new Event('submit')); });
+        adminPasswordInput.addEventListener('keypress', (e) => { if(e.key==='Enter') adminLoginForm.dispatchEvent(new Event('submit')); });
+    })();
+</script>
+</body>
+</html>
